@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ƐMMA'§ - Tienda Online</title>
+    <style>
+        :root {
+            --bg-frio: #F4F7FA;
+            --acero-oscuro: #0F172A;
+            --acero-medio: #334155;
+            --plata: #64748B;
+            --acento-claro: #38BDF8;
+            --blanco: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-frio);
+            color: var(--acero-oscuro);
+            overflow-x: hidden;
+        }
+
+        #splash {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--acero-oscuro);
+            color: var(--blanco);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 2s forwards;
+            animation-delay: 1.2s;
+        }
+
+        .splash-logo-container {
+            position: relative;
+            text-align: center;
+        }
+
+        .splash-tiara {
+            position: absolute;
+            top: -22px;
+            right: 5px;
+            font-size: 1.8rem;
+            transform: rotate(15deg);
+        }
+
+        #splash h1 {
+            margin: 0;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            color: var(--blanco);
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        header {
+            background-color: var(--acero-oscuro);
+            color: var(--blanco);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--acento-claro);
+        }
+
+        .header-logo {
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-tiara {
+            position: absolute;
+            top: -12px;
+            right: -2px;
+            font-size: 1rem;
+            transform: rotate(15deg);
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; letter-spacing: 2px; }
+
+        .cart-icon { font-size: 1.5rem; cursor: pointer; position: relative; }
+
+        #cart-count {
+            position: absolute;
+            top: -5px; right: -10px;
+            background-color: var(--acento-claro);
+            color: var(--acero-oscuro);
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            overflow-x: auto;
+            padding: 12px;
+            background-color: var(--blanco);
+            border-bottom: 1px solid #CBD5E1;
+        }
+
+        nav::-webkit-scrollbar { display: none; }
+
+        .cat-btn {
+            background-color: var(--bg-frio);
+            border: 1px solid var(--plata);
+            color: var(--acero-medio);
+            padding: 8px 15px;
+            margin-right: 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .cat-btn.active {
+            background-color: var(--acero-oscuro);
+            color: var(--blanco);
+            border-color: var(--acero-oscuro);
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .producto-card {
+            background-color: var(--blanco);
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .producto-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background-color: #F1F5F9;
+        }
+
+        .producto-card h3 { font-size: 0.95rem; margin: 5px 0; color: var(--acero-oscuro); }
+        .producto-card p.desc { font-size: 0.75rem; color: var(--plata); margin-bottom: 8px; }
+        .producto-card p.precio { font-size: 1.1rem; font-weight: bold; color: var(--acero-medio); margin-bottom: 8px; }
+
+        .add-btn {
+            background-color: var(--acero-oscuro);
+            color: var(--blanco);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        #cart-modal {
+            position: fixed;
+            top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%;
+            background-color: var(--blanco);
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #cart-modal.open { right: 0; }
+
+        .cart-header {
+            background-color: var(--acero-oscuro);
+            color: var(--blanco);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 { margin: 0; }
+        .close-cart { background: none; border: none; color: var(--blanco); font-size: 1.5rem; cursor: pointer; }
+
+        .cart-items { flex-grow: 1; overflow-y: auto; padding: 15px; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px; font-size: 0.9rem; }
+
+        .cart-footer { padding: 15px; background-color: var(--bg-frio); border-top: 2px solid #E2E8F0; }
+        
+        .checkout-form input {
+            width: 100%; padding: 10px; margin-bottom: 8px;
+            border: 1px solid #CBD5E1; border-radius: 5px; box-sizing: border-box;
+            background-color: var(--blanco);
+        }
+
+        .checkout-btn {
+            background-color: var(--acero-oscuro); color: var(--blanco);
+            border: none; padding: 12px; width: 100%;
+            font-size: 1rem; font-weight: bold; border-radius: 5px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div class="splash-logo-container">
+            <span class="splash-tiara">👑</span>
+            <h1>ƐMMA'§</h1>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-logo">
+            <span class="header-tiara">👑</span>
+            <h1>ƐMMA'§</h1>
+        </div>
+        <div class="cart-icon" onclick="toggleCart()">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <nav>
+        <button class="cat-btn active" onclick="filtrar('Todos', this)">Todos</button>
+        <button class="cat-btn" onclick="filtrar('Vestidos', this)">Vestidos</button>
+        <button class="cat-btn" onclick="filtrar('Pantalones', this)">Pantalones</button>
+        <button class="cat-btn" onclick="filtrar('Zapatos', this)">Zapatos y Sandalias</button>
+        <button class="cat-btn" onclick="filtrar('Maquillaje', this)">Maquillaje</button>
+        <button class="cat-btn" onclick="filtrar('Camisas', this)">Camisas de Dama</button>
+    </nav>
+
+    <main class="productos-grid" id="lista-productos"></main>
+
+    <div id="cart-modal">
+        <div class="cart-header">
+            <h2>Tu Carrito</h2>
+            <button class="close-cart" onclick="toggleCart()">✖</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p>El carrito está vacío.</p>
+        </div>
+        <div class="cart-footer">
+            <h3 style="margin-top:0;">Total: $<span id="cart-total">0.00</span></h3>
+            <div class="checkout-form">
+                <input type="text" id="cliente-nombre" placeholder="Nombre" required>
+                <input type="text" id="cliente-apellido" placeholder="Apellido" required>
+                <input type="text" id="cliente-ciudad" placeholder="Ciudad" required>
+                <button class="checkout-btn" onclick="emitirPedido()">Emitir Pedido a Tienda 🛍️</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const precioAzar = () => (Math.random() * (40 - 15) + 15).toFixed(2);
+
+        const productos = [
+            { id: 1, categoria: "Vestidos", nombre: "Vestido Halter de Organza", desc: "Corte exclusivo Petite.", precio: precioAzar(), imagen: "" },
+            { id: 2, categoria: "Pantalones", nombre: "Pantalón Casual Cotton", desc: "Algodón fresco y cómodo.", precio: precioAzar(), imagen: "" },
+            { id: 3, categoria: "Maquillaje", nombre: "SHEGLAM Nude Concealer", desc: "Corrector de alta cobertura.", precio: precioAzar(), imagen: "" },
+            { id: 4, categoria: "Maquillaje", nombre: "Setting Spray SHEGLAM", desc: "Fijador de larga duración.", precio: precioAzar(), imagen: "" },
+            { id: 5, categoria: "Maquillaje", nombre: "Individual Lash Clusters", desc: "Pestañas efecto natural.", precio: precioAzar(), imagen: "" },
+            { id: 6, categoria: "Zapatos", nombre: "Walking Shoes", desc: "Calzado cómodo para andar.", precio: precioAzar(), imagen: "" },
+            { id: 7, categoria: "Camisas", nombre: "Camisa New York Brooklyn", desc: "Estilo urbano impreso.", precio: precioAzar(), imagen: "" },
+            { id: 8, categoria: "Camisas", nombre: "Camisa Print Bear", desc: "Diseño casual moderno.", precio: precioAzar(), imagen: "" }
+        ];
+
+        let carrito = [];
+
+        function mostrarProductos(cat) {
+            const contenedor = document.getElementById("lista-productos");
+            contenedor.innerHTML = "";
+            const filtrados = cat === "Todos" ? productos : productos.filter(p => p.categoria === cat);
+
+            filtrados.forEach(p => {
+                contenedor.innerHTML += `
+                    <div class="producto-card">
+                        <img src="${p.imagen || 'https://via.placeholder.com/150'}" alt="${p.nombre}" class="producto-img">
+                        <div>
+                            <h3>${p.nombre}</h3>
+                            <p class="desc">${p.desc}</p>
+                            <p class="precio">$${p.precio}</p>
+                        </div>
+                        <button class="add-btn" onclick="agregarAlCarrito(${p.id})">Agregar</button>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrar(cat, btn) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            mostrarProductos(cat);
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-modal').classList.toggle('open');
+        }
+
+        function agregarAlCarrito(id) {
+            const producto = productos.find(p => p.id === id);
+            carrito.push(producto);
+            actualizarCarrito();
+        }
+
+        function actualizarCarrito() {
+            document.getElementById('cart-count').innerText = carrito.length;
+            const contenedorItems = document.getElementById('cart-items');
+            
+            if (carrito.length === 0) {
+                contenedorItems.innerHTML = '<p>El carrito está vacío.</p>';
+                document.getElementById('cart-total').innerText = '0.00';
+                return;
+            }
+
+            contenedorItems.innerHTML = '';
+            let total = 0;
+            carrito.forEach((item, index) => {
+                total += parseFloat(item.precio);
+                contenedorItems.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.nombre} - $${item.precio}</span>
+                        <button onclick="eliminarDelCarrito(${index})" style="background:none; border:none; color:red; cursor:pointer;">❌</button>
+                    </div>
+                `;
+            });
+            document.getElementById('cart-total').innerText = total.toFixed(2);
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            actualizarCarrito();
+        }
+
+        function emitirPedido() {
+            const nombre = document.getElementById('cliente-nombre').value;
+            const apellido = document.getElementById('cliente-apellido').value;
+            const ciudad = document.getElementById('cliente-ciudad').value;
+
+            if(!nombre || !apellido || !ciudad) {
+                alert("Por favor completa tus datos de envío.");
+                return;
+            }
+
+            let mensaje = `Hola, quiero hacer un pedido en ƐMMA'§:%0A`;
+            mensaje += `*Cliente:* ${nombre} ${apellido}%0A`;
+            mensaje += `*Ciudad:* ${ciudad}%0A%0A*Productos:*%0A`;
+
+            let total = 0;
+            carrito.forEach(item => {
+                mensaje += `- ${item.nombre} ($${item.precio})%0A`;
+                total += parseFloat(item.precio);
+            });
+
+            mensaje += `%0A*Total a pagar:* $${total.toFixed(2)}`;
+
+            const urlWhatsApp = `https://api.whatsapp.com/send?phone=584144002218&text=${mensaje}`;
+            window.open(urlWhatsApp, '_blank');
+        }
+
+        mostrarProductos("Todos");
+    </script>
+</body>
+</html>
